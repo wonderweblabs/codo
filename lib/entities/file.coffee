@@ -16,10 +16,18 @@ module.exports = class Entities.File extends Entity
     @name      = Path.relative(@environment.options.basedir, @path)
     @basename  = Path.basename(@name)
     @dirname   = Path.dirname(@name)
+
+    if @environment.options.namespace
+      relativePath = Path.relative(@environment.options.namespaceDir, @path)
+      @namespace = Path.dirname(relativePath).split(Path.sep)
+    else
+      @namespace = []
+
     @methods   = []
     @variables = []
     @mixins    = []
     @classes   = []
+
     if @environment.options.debug
       Winston.info "Creating new File Entity"
       Winston.info " name: " + @name

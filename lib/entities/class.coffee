@@ -55,7 +55,10 @@ module.exports = class Entities.Class extends Entity
   fetchName: (source, selfish, container) ->
     name = []
 
-    # Nested class definition inherits 
+    # Optional namespace derived from the file location
+    name = name.concat @file.namespace
+
+    # Nested class definition inherits
     # the namespace from the containing class
     name.push container.name if container
 
@@ -90,14 +93,14 @@ module.exports = class Entities.Class extends Entity
   linkifyAssign: (node) ->
     for entity in node.entities when entity.selfish
       # class Foo
-      #   @foo = ->            
+      #   @foo = ->
       if entity instanceof Method
         entity.kind = 'static'
         @methods.push entity
 
       # class Foo
       #   @foo = 'test'
-      if entity instanceof Variable 
+      if entity instanceof Variable
         entity.kind = 'static'
         @variables.push entity
 
@@ -113,7 +116,7 @@ module.exports = class Entities.Class extends Entity
 
         # class Foo
         #   foo: 'test'
-        if entity instanceof Variable 
+        if entity instanceof Variable
           entity.kind = if entity.selfish then 'static' else 'dynamic'
           @variables.push entity
 

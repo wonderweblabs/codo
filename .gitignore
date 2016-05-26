@@ -2,5 +2,6 @@
 node_modules
 .bundle
 .idea
+.node-version
 doc
 npm-debug.log

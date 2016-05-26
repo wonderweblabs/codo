@@ -22,6 +22,7 @@ module.exports = class Command
     {name: 'undocumented', alias: 'u', describe: 'List undocumented objects', boolean: true, default: false}
     {name: 'closure', describe: 'Try to parse closure-like block comments', boolean: true, default: false}
     {name: 'debug', alias: 'd', boolean: true}
+    {name: 'namespace', alias: 'ns', describe: 'Namespace dir for auto namespacing'}
   ]
 
   @run: ->
