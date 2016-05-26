@@ -2,21 +2,33 @@ $ ->
 
   # Create stripes
   window.createStripes = ->
-    $('#content.list li:visible').each (i, el) ->
-      if i % 2 is 0 then $(el).addClass('stripe') else $(el).removeClass('stripe')
+    # $('#content.list li:visible').each (i, el) ->
+    #   if i % 2 is 0 then $(el).addClass('stripe') else $(el).removeClass('stripe')
 
   # Indent nested Lists
-  window.indentTree = (el, width) ->
-    $(el).find('> ul').each ->
-      $(@).find('> li').css 'padding-left', "#{ width }px"
-      window.indentTree $(@), width + 20
+  window.indentTree = (el, width, widthSubNavi) ->
+    # $(el).find('> ul').each ->
+    #   $(@).find('> li').css 'padding-left', "#{ width }px"
+    #   window.indentTree $(@), width + 20
 
 
   #
   # Add tree arrow links
   #
   $('#content.tree ul > ul').each ->
-    $(@).prev().prepend $('<a href="#" class="toggle"></a>')
+    try
+      collapsedStoredData = JSON.parse(localStorage.codoToggles) || {}
+    catch e
+      collapsedStoredData = {}
+
+    toggleName  = $(@).prev().data('toggle-name') || null
+    opened      = collapsedStoredData[toggleName] || false
+
+    if opened
+      $(@).prev().prepend $('<a href="#" class="toggle"></a>')
+    else
+      $(@).prev().prepend $('<a href="#" class="toggle collapsed"></a>')
+      $(@).toggle()
 
   #
   # Search List
@@ -60,8 +72,24 @@ $ ->
     $(@).parent().next().toggle()
     window.createStripes()
 
+    try
+      collapsedStoredData = JSON.parse(localStorage.codoToggles) || {}
+    catch e
+      collapsedStoredData = {}
+
+    toggleName = $(@).parent().data('toggle-name') || null
+    return if toggleName == null
+
+    if $(@).hasClass('collapsed')
+      collapsedStoredData[toggleName] = false
+    else
+      collapsedStoredData[toggleName] = true
+
+    localStorage.codoToggles = JSON.stringify(collapsedStoredData)
+
+
   #
   # Initialize
   #
-  indentTree $('#content.list > ul'), 20
+  indentTree $('#content.list > ul'), 5, 20
   createStripes()

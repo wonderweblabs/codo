@@ -14,7 +14,12 @@
       - createLevel = (tree) =>
         %ul
           - for entry in tree
-            %li
+            - cssClass = if entry.children.length > 0 then 'subtree' else ''
+            - toggleName = ['file']
+            - toggleName.push entry.segmentPaths if entry.segmentPaths? && entry.segmentPaths.length > 0
+            - toggleName.push (entry.entity?.basename || entry.name)
+
+            %li{ class: cssClass, 'data-toggle-name' => toggleName.join('.') }
               - if entry.entity
                 %a{href: @pathFor('file', entry.entity, @path), target: 'main'}
                   = entry.entity.basename
